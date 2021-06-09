@@ -1,0 +1,30 @@
+version: '3.7'
+
+volumes:
+  postgres_data_vol:
+    external: false
+
+services:
+
+  postgres:
+    image: postgres:latest
+    restart: unless-stopped
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: trust
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - postgres_data_vol:/var/lib/postgresql/data/
+
+  web:
+    image: polls
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    depends_on:
+      - postgres
+    ports:
+      - "127.0.0.1:5000:5000"
+    entrypoint: /code/entrypoint.sh
+    volumes:
+      - .:/code
