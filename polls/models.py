@@ -8,6 +8,7 @@ class Participant(UUIDMixin):
     """Model to store participants info."""
 
     ip = models.GenericIPAddressField(unique=True)
+    user_agent = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return self.ip
@@ -19,10 +20,11 @@ class Poll(UUIDMixin):
     title = models.TextField(blank=True)
     creator = models.ForeignKey(Participant, on_delete=models.DO_NOTHING)
     created_at = models.DateTimeField(auto_now_add=True)
+    multi_selection = models.BooleanField(default=False)
 
     @property
     def url(self):
-        return reverse('poll-vote', args=(self.pk,))
+        return reverse('poll-detail', args=(self.pk,))
 
     def __str__(self):
         return self.title
