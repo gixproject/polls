@@ -24,7 +24,7 @@ services:
     depends_on:
       - postgres
     ports:
-      - "127.0.0.1:5000:5000"
+      - "127.0.0.1:8000:8000"
     entrypoint: /code/entrypoint.sh
     volumes:
       - .:/code

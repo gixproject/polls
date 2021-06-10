@@ -24,7 +24,9 @@ INSTALLED_APPS = [
     # extensions
     'django_extensions',
     'rest_framework',
-    # packages
+    'drf_yasg',
+    # applications
+    'polls'
 ]
 
 MIDDLEWARE = [
@@ -97,6 +99,11 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+REST_FRAMEWORK = {
+    'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.NamespaceVersioning',
+    'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.AllowAny',),
+}
 
 LOG_LEVEL = env('LOG_LEVEL', 'WARNING')
 LOGGING = {
