@@ -7,7 +7,7 @@ env.read_env()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = env('SECRET_KEY', 'qbikqnt$6%kpg)fy29@18tb')
+SECRET_KEY = env('SECRET_KEY', '&r%ije5__2)$dgh)2eu(l04&mx6rxerd&j1mejb!_6x@!_^')
 DEBUG = env.bool('DEBUG')
 
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')

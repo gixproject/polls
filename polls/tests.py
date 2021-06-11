@@ -173,3 +173,26 @@ class PollVoteTest(TestCase):
         response = self.client.post(reverse('poll-vote', args=(self.poll.id,)), payload)
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {'choices_id': ['multiple choices are not available']})
+
+
+class PollSearchTest(TestCase):
+
+    def setUp(self):
+        creator = ParticipantFactory(ip='192.64.4.52')
+        participant = ParticipantFactory(ip='168.32.44.52')
+        self.poll = PollFactory(
+            title='Do you believe in Python?', creator=creator, multi_selection=True,
+        )
+        self.choice1 = ChoiceFactory(poll=self.poll, choice='May the Force be with you')
+        self.choice1.participants.set([participant])
+        self.choice2 = ChoiceFactory(poll=self.poll, choice='Always')
+
+    def test_poll_search(self):
+        response = self.client.get(reverse('poll-list'), {'search': 'you believe'})
+        self.assertEqual(response.json()[0]['id'], str(self.poll.id))
+        self.assertEqual(response.status_code, 200)
+
+    def test_poll_search_without_query(self):
+        response = self.client.get(reverse('poll-list'))
+        self.assertEqual(response.json()[0]['id'], str(self.poll.id))
+        self.assertEqual(response.status_code, 200)
