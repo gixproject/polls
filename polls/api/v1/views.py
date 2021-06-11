@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from polls.api.v1.serializers import PollSerializer, PollCreateSerializer, ChoiceIdsSerializer
 from polls.models import Poll
 from polls.permissions import IsCreatorIP, CanVote
-from polls.utils import get_ip, perform_vote
+from polls.utils import get_user_data
 
 
 class PollViewSet(
@@ -53,7 +53,7 @@ class PollViewSet(
     @action(
         detail=True,
         serializer_class=ChoiceIdsSerializer,
-        methods=('post',)
+        methods=('post',),
     )
     def vote(self, request, pk):
         """
@@ -61,14 +61,9 @@ class PollViewSet(
         """
 
         poll = self.get_object()
-        serializer = ChoiceIdsSerializer(data=request.data)
+        serializer = ChoiceIdsSerializer(data=request.data, context={'poll': poll})
         serializer.is_valid(raise_exception=True)
-
-        participant_ip = get_ip(request=request)
-        perform_vote(
-            choices_id=serializer.validated_data['choices_id'],
-            participant_ip=participant_ip,
-        )
+        serializer.save(user_data=get_user_data(request=request))
 
         data = PollSerializer(poll, context={'request': request}).data
 
