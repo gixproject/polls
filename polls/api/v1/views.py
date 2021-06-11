@@ -1,5 +1,5 @@
 from drf_yasg.utils import swagger_auto_schema
-from rest_framework import viewsets, mixins, status
+from rest_framework import viewsets, mixins, filters, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
@@ -13,9 +13,12 @@ class PollViewSet(
     viewsets.GenericViewSet,
     mixins.RetrieveModelMixin,
     mixins.DestroyModelMixin,
+    mixins.ListModelMixin,
 ):
     queryset = Poll.objects.all()
     serializer_class = PollSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['title']
 
     def get_serializer_class(self):
         if self.action == 'create':
